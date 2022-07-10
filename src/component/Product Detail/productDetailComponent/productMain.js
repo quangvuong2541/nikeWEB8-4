@@ -229,7 +229,7 @@ function ProductMain({
           value={item.size}
           className={classes.SizeRadio}
           onChange={handleChange}
-          // onBlur={checkSize}
+          onBlur={checkSize}
         />
         <div
           className={

@@ -9,6 +9,7 @@ import { Dialog, Slide } from '@mui/material';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { ErrorMessage } from "@hookform/error-message";
+import { PersonOutline } from '@mui/icons-material';
 const useStyles = makeStyles((theme) => ({
   nav1Menu: {
     margin: "0 12px",
@@ -227,11 +228,12 @@ const SignIn = (props) => {
     form.reset()
     props.callApiLogin(data)
   }
-  const onCloseSignIn = (data,e ) => {
+  const onCloseSignIn = (data, e) => {
     let form = document.getElementById("formSignIn")
     form.reset()
   }
   let { userLocal } = props
+
   return (
     <div>
       {!userLocal && (
@@ -300,7 +302,7 @@ const SignIn = (props) => {
                       }
                     })}
 
-                    // {...register("email", { required: true },)}
+                  // {...register("email", { required: true },)}
                   />
                   <ErrorMessage
                     errors={errors}
@@ -431,6 +433,46 @@ const SignIn = (props) => {
           </Dialog>
         </div>
       )}
+      {userLocal && (
+        <div
+          onMouseOver={() => setMenu(true)}
+          onMouseLeave={() => setMenu(false)}
+
+        >
+          <span className={classes.nav1Menu}>
+            hello, {userLocal.user.name}
+            <PersonOutline className={classes.UserIcon} />
+          </span>
+          {userMenu && (
+            <div className={classes.UserMenuContainer}>
+              <div className={classes.UserMenuHeader}>Account</div>
+              <Link to="/user/profile" style={{ textDecoration: "none" }}>
+                <div className={classes.UserMenuItem}>
+                  Profile
+                </div>
+              </Link>
+              <Link to="/user/order" style={{ textDecoration: "none" }}>
+                <div className={classes.UserMenuItem}>
+                  orders
+                </div>
+              </Link>
+
+              <Link to="/user/favorite" style={{ textDecoration: "none" }}>
+                <div className={classes.UserMenuItem}>
+                  Favorite
+                </div>
+              </Link>
+
+              <div className={classes.UserMenuItem}
+                onClick={() => props.logoutAction(userLocal)}
+              >
+                Log out
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
     </div>
   )
 }
@@ -438,7 +480,7 @@ const mapStateToProps = (state) => {
   return {
     open: state.reducerSignSignUp.open,
     openSU: state.reducerSignSignUp.openSU,
-    userLocal: state.reducerSignSignUp.userLocal,
+    userLocal: state.reducerSignSignUp.user,
     isAdmin: state.reducerSignSignUp.isAdmin
 
   }

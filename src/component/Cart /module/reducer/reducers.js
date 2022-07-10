@@ -33,6 +33,30 @@ const reducerCart = (state = initialState, { type, payload }) => {
             state.products = productCopy
             localStorage.setItem("cart", JSON.stringify(state.products))
             break;
+        case ActionType.UPDATE_SIZE_COLOR:
+            const { quantity, item, size } = payload
+            const itemUpdate = checkDuplicate(item, productCopy)
+            if (quantity) {
+                itemUpdate.quantity = parseInt(quantity)
+            } else if (size) {
+                itemUpdate.size = size
+            }
+            state.products = productCopy
+            localStorage.setItem("cart", JSON.stringify(productCopy))
+            break;
+        case ActionType.REMOVE_TO_CARD:
+            const itemRemove = checkDuplicate(payload, productCopy)
+            const index = productCopy.findIndex((item) => {
+                return item.id === itemRemove.id
+            })
+            if (itemRemove.quantity > 1) {
+                itemRemove.quantity -= 1
+            } else {
+                productCopy.splice(index, 1)
+            }
+            state.products = productCopy
+            localStorage.setItem("cart", JSON.stringify(state.products))
+            break;
 
         default:
             break;

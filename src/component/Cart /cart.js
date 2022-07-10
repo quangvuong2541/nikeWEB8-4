@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as action from "./module/action/action"
+import CartBag from './cartComponent/cartBag';
 const useStyles = makeStyles((theme) => ({
     Container: {
         margin: '40px 0',
@@ -106,7 +107,6 @@ const Cart = (props) => {
         return sum + item.quantity * item.price
     }, 0)
     const { window } = props
-    console.log({ window });
     const container = window !== undefined
         ? () => window().document.body
         : undefined
@@ -115,7 +115,11 @@ const Cart = (props) => {
     const dispatch = useDispatch()
     const history = useNavigate()
     const checkOut = () => {
-        // khi làm chức năng login
+        if (!JSON.parse(localStorage.getItem("user"))) {
+            alert("please sign in before checkout")
+        } else {
+            alert("please buy product before checkout")
+        }
     }
     const transactionSuccess = (data) => {
         alert("payment success")
@@ -165,6 +169,7 @@ const Cart = (props) => {
                             </Hidden>
 
                             {/*  bag  */}
+                            <CartBag/>
 
                         </Grid>
 
@@ -179,8 +184,10 @@ const Cart = (props) => {
             {/* checkout mobile  */}
             <Hidden mdUp>
                 <div className={classes.CheckoutMobileContainer}>
-                    <div>
-                        <button className={classes.CheckoutButton}>
+                    <div style={{ margin: '0 12px' }}>
+                        <button
+                            onClick={() => checkOut()}
+                            className={classes.CheckoutButton}>
                             go to checkout
                         </button>
                     </div>

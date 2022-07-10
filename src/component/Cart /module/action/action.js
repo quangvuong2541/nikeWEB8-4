@@ -12,6 +12,8 @@ export const postAPICart = (data, token, history) => {
             const res = await API("/cart/create", "POST", data, token);
             setTimeout(() => {
                 alert("success")
+                localStorage.removeItem("cart")
+                history("/user/order")
                 dispatch(createAction({ type: ActionType.ADD_TO_CARD, payload:[] }))
             },2000)
         } catch (error) {

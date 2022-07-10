@@ -23,8 +23,6 @@ export const createAction = ({ type, payload }) => {
     }
 }
 export const fetchApiLoginUser = (data) => {
-    const notify = () => toast("Wow so easy!");
-
     return async (dispatch) => {
         try {
             const res = await API("users/login", "POST", data);
