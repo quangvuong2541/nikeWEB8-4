@@ -6,6 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as action from "./module/action/action"
 import CartBag from './cartComponent/cartBag';
+import * as ReactDOM from 'react-dom';
+import CartSummary from './cartComponent/cartSummary';
+
 const useStyles = makeStyles((theme) => ({
     Container: {
         margin: '40px 0',
@@ -101,7 +104,8 @@ const Cart = (props) => {
     const [PromoCode, setPromoCode] = useState(true)
     const products = useSelector(state => state.reducerCart.products)
     const cancelMoreOptions = () => {
-        // let moreOption = doc
+        let moreOption = document.getElementById("MoreOptionsContainer");
+        ReactDOM.findDOMNode(moreOption).style.display = "none"
     }
     const sumMoney = products.reduce((sum, item) => {
         return sum + item.quantity * item.price
@@ -167,14 +171,13 @@ const Cart = (props) => {
                             <Hidden smDown >
                                 <div className={classes.Bag}>bag</div>
                             </Hidden>
-
                             {/*  bag  */}
-                            <CartBag/>
-
+                            <CartBag />
                         </Grid>
 
                         <Grid item md={4} xs={12}>
                             {/* summary */}
+                            <CartSummary/>
                         </Grid>
                     </Grid>
                     {/* cart favorite */}
@@ -207,9 +210,22 @@ const Cart = (props) => {
                             member checkout
                         </button>
                     </div>
-
-
                 </Drawer>
+            </Hidden>
+            <Hidden smUp>
+                <div id="MoreOptionsContainer" className={classes.MoreOptionsContainer}>
+                    <button className={classes.MoreOptionsButton}>
+                        Move to Favourites
+                    </button>
+                    <button className={classes.MoreOptionsButton}>
+                        Remove
+                    </button>
+                    <button className={classes.MoreOptionsCancel}
+                    onClick={()=>cancelMoreOptions()}
+                    >
+                        Cancel
+                    </button>
+                </div>
             </Hidden>
         </div>
     )

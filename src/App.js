@@ -11,11 +11,11 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<NavBar />}>
+          {/* <Route path="/" element={<NavBar />}> */}
             <Route path="/" caseSensitive={true} element={<HomePage />} />
             <Route path="/detailProduct/:id" element={<DetailProductPage />} />
             <Route path="/cart" element={<CartPage />} />
-          </Route>
+          {/* </Route> */}
         </Routes>
       </BrowserRouter>
     </div>
