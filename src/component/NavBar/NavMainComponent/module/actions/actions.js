@@ -32,6 +32,10 @@ export const fetchApiLoginUser = (data) => {
             }))
             localStorage.setItem("user", JSON.stringify(res.data))
             alert(res.data.messager)
+            const userLocal =  JSON.parse(localStorage.getItem("user"))
+            // console.log(userLocal);
+            const favorLocal = userLocal?.user.productsFavorite
+            localStorage.setItem("userFavor", JSON.stringify(favorLocal))
         } catch (err) {
             alert("login fail")
 

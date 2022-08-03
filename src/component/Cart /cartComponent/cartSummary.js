@@ -7,6 +7,7 @@ import * as action from "../module/action/action"
 import { makeStyles } from '@mui/styles';
 import Tooltip from '@mui/material/Tooltip';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Paypal from '../../paypal/paypal';
 
 const useStyles = makeStyles((theme) => ({
     Summary: {
@@ -84,15 +85,57 @@ const CartSummary = () => {
     }, 0)
     const checkOuts = () => {
         if (!JSON.parse(localStorage.getItem("user"))) {
-            alert("please signin before checkout")
+            console.log("please signin before checkout")
         } else {
             if (products.length > 0) {
                 setCheckOut(true)
             } else {
-                alert("please buy product before checkout")
+                console.log("please buy product before checkout")
             }
         }
     }
+    const transactionSuccess = (data) => {
+        console.log("Payment success")
+        for (const item of products) {
+            delete item.sizes
+            delete item.message
+        }
+        const userLocal = JSON.parse(localStorage.getItem("user"))
+        const { token } = userLocal
+        const object = {
+            products: products,
+            isPayed: data.paid,
+            description: "paypal"
+        }
+        dispatch(action.postAPICart(object, token, history))
+    }
+    const transactionLive = (data) => {
+        for (const item of products) {
+            delete item.sizes
+            delete item.message
+        }
+        const userLocal = JSON.parse(localStorage.getItem("user"))
+        const { token } = userLocal
+        const object = {
+            products: products,
+            isPayed: false,
+            description: "payment on delivery"
+        }
+        dispatch(action.postAPICart(object, token, history))
+    }
+    const transactionError = (data) => {
+        setTimeout(() => {
+            console.log("payment fail")
+              
+        }  , 2000)
+    }
+    const transactionCancel = (data) => {
+        console.log("error", data);
+    }
+    const convertVNDtoUSD = () => {
+        return (sumMoney / 23000).toFixed(2)
+    }
+
     return (
         <div className={classes.Summary}>
             <div className={classes.Title}>Summary</div>
@@ -141,6 +184,23 @@ const CartSummary = () => {
                         </div>
                     </Hidden>
                 )}
+                <Hidden smDown>
+                    {checkOut && (
+                        <Paypal
+                            sum={convertVNDtoUSD()}
+                            transactionSuccess={transactionSuccess}
+                            transactionCancel={transactionCancel}
+                            transactionError={transactionError}
+                        />
+                    )}{
+                        checkOut && (
+                            <button onClick={transactionLive}
+                                className={classes.checkOutButton}
+                            >Payment on delivery</button>
+                        )
+                    }
+                </Hidden>
+
             </div>
         </div>
     )

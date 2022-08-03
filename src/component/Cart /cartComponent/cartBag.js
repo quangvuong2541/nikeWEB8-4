@@ -106,12 +106,10 @@ const CustomSelect = withStyles((theme) => ({
 export default function CartBag() {
   const classes = useStyles();
   const products = useSelector((state) => state.reducerCart.products);
+
   // Qty phải là mảng int vì send lên BE đỡ phải convert lại :))
   const Qty = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-  const openMoreOptions = () => {
-    let moreOption = document.getElementById("MoreOptionsContainer");
-    ReactDOM.findDOMNode(moreOption).style.display = "block";
-  };
+  
   const [itemProduct, setItemProduct] = React.useState("");
   const dispatch = useDispatch();
   // get size when user click
@@ -146,7 +144,7 @@ export default function CartBag() {
     <div className={classes.CartBag}>
       {/*Product*/}
       {products &&
-        products.map((item, key) => {
+        products?.map((item, key) => {
           return (
             <div className={classes.Product} key={key}>
               <a href="#" className={classes.ProductImageContainer}>

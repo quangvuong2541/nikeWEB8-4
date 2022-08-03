@@ -98,6 +98,7 @@ const useStyles = makeStyles(theme => ({
     const sumQuanlity = products.reduce((sum, item) => {
       return sum + item.quantity
     }, 0)
+ 
     return (
       <>
         <Modal

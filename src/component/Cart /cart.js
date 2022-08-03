@@ -8,6 +8,8 @@ import * as action from "./module/action/action"
 import CartBag from './cartComponent/cartBag';
 import * as ReactDOM from 'react-dom';
 import CartSummary from './cartComponent/cartSummary';
+import Paypal from '../paypal/paypal';
+import CartFavorite from './cartComponent/cartFavorite';
 
 const useStyles = makeStyles((theme) => ({
     Container: {
@@ -147,43 +149,59 @@ const Cart = (props) => {
     const convertVNDtoUSD = () => {
         return (sumMoney / 23000).toFixed(2)
     }
+    const transactionLive = (data) => {
+        for (const item of products) {
+            delete item.sizes
+            delete item.message
+        }
+        const userLocal = JSON.parse(localStorage.getItem("user"))
+        const { token } = userLocal
+        const object = {
+            products: products,
+            isPayed: false,
+            description: "payment on delivery"
+        }
+        dispatch(action.postAPICart(object, token, history))
+    }
     return (
+
         <div className={classes.container}>
-            <Container maxWidth="xl">
-                <div className={classes.cart}>
-                    <Hidden mdUp>
-                        <div className={classes.BagMobile}>
-                            <div className={classes.Bag}>bag</div>
-                            <span className={classes.NumberItems}>bag</span>
-                        </div>
-                    </Hidden>
-                    <Grid container spacing={2}>
-                        <Grid item md={8} xs={12}>
-                            {PromoCode &&
-                                <div className={classes.PromoCode}>
-                                    <div className={classes.PromoCodeTitle}>
-                                        have a promo code
-                                    </div>
-                                    <div>If you have a promo code you will be able to apply it on the payment page during checkout.
-                                    </div>
-                                </div>
-                            }
-                            <Hidden smDown >
+            {products && (
+                <Container maxWidth="xl">
+                    <div className={classes.cart}>
+                        <Hidden mdUp>
+                            <div className={classes.BagMobile}>
                                 <div className={classes.Bag}>bag</div>
-                            </Hidden>
-                            {/*  bag  */}
-                            <CartBag />
-                        </Grid>
+                                <span className={classes.NumberItems}>bag</span>
+                            </div>
+                        </Hidden>
+                        <Grid container spacing={2}>
+                            <Grid item md={8} xs={12}>
+                                {PromoCode &&
+                                    <div className={classes.PromoCode}>
+                                        <div className={classes.PromoCodeTitle}>
+                                            have a promo code
+                                        </div>
+                                        <div>If you have a promo code you will be able to apply it on the payment page during checkout.
+                                        </div>
+                                    </div>
+                                }
+                                <Hidden smDown >
+                                    <div className={classes.Bag}>bag</div>
+                                </Hidden>
+                                {/*  bag  */}
+                                <CartBag />
+                            </Grid>
 
-                        <Grid item md={4} xs={12}>
-                            {/* summary */}
-                            <CartSummary/>
+                            <Grid item md={4} xs={12}>
+                                {/* summary */}
+                                <CartSummary />
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    {/* cart favorite */}
-
-                </div>
-            </Container>
+                        <CartFavorite />
+                    </div>
+                </Container>
+            )}
             {/* checkout mobile  */}
             <Hidden mdUp>
                 <div className={classes.CheckoutMobileContainer}>
@@ -206,7 +224,15 @@ const Cart = (props) => {
                 >
                     <div className={classes.MemberCheckoutContainer}>
                         {/* paypal */}
-                        <button className={classes.MoreOptionsButton}>
+                        <Paypal
+                            sum={convertVNDtoUSD()}
+                            transactionSuccess={transactionSuccess}
+                            transactionCancel={transactionCancel}
+                            transactionError={transactionError}
+                        />
+                        <button className={classes.MoreOptionsButton}
+                            onClick={transactionLive}
+                        >
                             member checkout
                         </button>
                     </div>
@@ -221,13 +247,15 @@ const Cart = (props) => {
                         Remove
                     </button>
                     <button className={classes.MoreOptionsCancel}
-                    onClick={()=>cancelMoreOptions()}
+                        onClick={() => cancelMoreOptions()}
                     >
                         Cancel
                     </button>
                 </div>
             </Hidden>
+
         </div>
+
     )
 }
 

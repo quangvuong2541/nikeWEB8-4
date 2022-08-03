@@ -57,7 +57,7 @@ const MoreNike = (props) => {
                                     <div className={classes.info}>
                                         <div className={classes.shopLink}>
                                             {item.titleButton}
-                                        </div>
+                                            </div>
 
                                     </div>
 

@@ -200,26 +200,27 @@ function ProductMain({
     }
   }
   // để dành sau khi hoàn thành xong chức năng login
-  // const checkSizeFavor = () => {
-  //   if (size === "") {
-  //     setFlag(true);
-  //     return;
-  //   }
-  //   setFlag(false);
-  //   // handleOpen();
-  //   const userLocal = JSON.parse(localStorage.getItem("user"));
-  //   if (!userLocal) {
-  //     notifiError("Please Login");
-  //   } else {
-  //     dispatch(
-  //       action.createAction({
-  //         type: AtionType.ADD_TO_CARDFAVOR,
-  //         payload: favorProduct,
-  //       })
-  //     );
-  //     dispatch(action.postFavoriteCart());
-  //   }
-  // };
+  const checkSizeFavor = () => {
+
+    if (size === "") {
+      setFlag(true);
+      return;
+    }
+    setFlag(false);
+    // handleOpen();
+    const userLocal = JSON.parse(localStorage.getItem("user"));
+    if (!userLocal) {
+      alert("Please Login");
+    } else {
+      dispatch(
+        action.createAction({
+          type: AtionType.ADD_TO_CARDFAVOR,
+          payload: favorProduct,
+        })
+      );
+      dispatch(action.postFavorAPICart());
+    }
+  };
   const listSize = detailProduct.sizes.map((item, index) => (
     <Grid item xs={4} key={index}>
       <label>
@@ -350,7 +351,8 @@ function ProductMain({
       <Grid item xs={12}>
         {isLoading ?
           <Skeleton width="100%">
-            <button className={classes.Favorite}>
+            <button className={classes.Favorite}
+            >
               Favorite
               <img src="https://icon-library.com/images/heart-icon-svg/heart-icon-svg-17.jpg" className={classes.FavoriteBorderIcon} />
             </button>
@@ -359,8 +361,8 @@ function ProductMain({
           <button
             className={classes.Favorite}
           //để dành sau khi thực hiện xong chức nagnw login
-          //     checkSizeFavor();
-          //   }}
+          onClick={() => {checkSizeFavor()}}
+
           >
             Favorite
             <img
